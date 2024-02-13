@@ -12,7 +12,7 @@ router.post(
       min: 5,
     }),
     body("describe").trim().isLength({
-      min: 10,
+      min: 5,
     }),
   ],
   feedController.createPost
