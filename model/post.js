@@ -18,9 +18,9 @@ const postSchema = new Schema(
     prize: {
       type: Number,
       required: true,
-    }
+    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model('Post', postSchema);
+module.exports = mongoose.model("Post", postSchema);

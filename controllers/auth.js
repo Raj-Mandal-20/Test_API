@@ -1,5 +1,4 @@
 const User = require("../model/user");
-const path = require("path");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -35,10 +34,10 @@ exports.login = async (req, res, next) => {
         { expiresIn: "1h" }
       );
       res.userId = loadedUser._id;
-      
+
       res.status(200).json({
-        userId : loadedUser._id.toString(),
-        token : token
+        userId: loadedUser._id.toString(),
+        token: token,
       });
     })
     .catch((err) => {

@@ -1,8 +1,5 @@
 const Post = require("../model/post");
-const path = require("path");
 const { validationResult } = require("express-validator");
-const bcrypt = require("bcryptjs");
-
 
 exports.getPosts = async (req, res, next) => {
   try {
