@@ -1,11 +1,11 @@
 const Post = require("../model/post");
-const path = require('path');
+const path = require("path");
 const { validationResult } = require("express-validator");
+const bcrypt = require("bcryptjs");
+
 
 exports.getPosts = async (req, res, next) => {
-
-  try{
-
+  try {
     const resData = await Post.find({});
     console.log(resData);
 
@@ -15,15 +15,13 @@ exports.getPosts = async (req, res, next) => {
       createdAt: new Date(),
       createdBy: "Raj Mandal",
     });
-  }
-  catch(err){
+  } catch (err) {
     console.log(err);
+    next(err);
   }
-
 };
 
 exports.createPost = async (req, res, next) => {
-  
   // console.log(req.body);
   const errors = validationResult(req);
 
@@ -42,25 +40,29 @@ exports.createPost = async (req, res, next) => {
     throw error;
   }
 
-  // console.log(req.file?.path);
-  console.log(req.file.path);
-  const title = req.body.title;
-  const describe = req.body.describe;
-  const imageUrl = req.file.path.replace("\\", "/");
-  const prize = req.body.prize;
-  // const createdBy = req.body.createdBy;
+  try {
+    // console.log(req.file?.path);
+    console.log(req.file.path);
+    const title = req.body.title;
+    const describe = req.body.describe;
+    const imageUrl = req.file.path.replace("\\", "/");
+    const prize = req.body.prize;
+    // const createdBy = req.body.createdBy;
 
-  const post = new Post({
-    title: title,
-    describe: describe,
-    imageUrl: imageUrl,
-    prize: prize,
-  });
-  
-   await post.save();
+    const post = new Post({
+      title: title,
+      describe: describe,
+      imageUrl: imageUrl,
+      prize: prize,
+    });
+
+    await post.save();
 
     res.status(201).json({
       message: "Post Created Successfully!",
       createdAT: new Date(),
     });
+  } catch (err) {
+    next(err);
+  }
 };

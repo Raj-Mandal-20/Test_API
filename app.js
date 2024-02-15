@@ -7,6 +7,8 @@ const feedRoute = require("./routes/feed");
 const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
 const app = express();
+const authRoute = require("./routes/auth");
+/* Additional Setup while using VPN to access database */
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -44,15 +46,28 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
 // tomorrow Learn authentication
 
+app.use("/auth", authRoute);
 app.use("/feed", feedRoute);
 
 app.use("/", (req, res, next) => {
   res.write("<h2> TESTING API </h2>");
   res.end();
+});
+
+// Advance Error Handling
+
+app.use((error, req, res, next) => {
+  console.log(error);
+  const status = error.status || 500;
+  const data = error.data;
+  const message = error.message;
+
+  res.status(status).json({
+    data: data,
+    message: message,
+  });
 });
 
 mongoose
