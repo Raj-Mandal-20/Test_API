@@ -8,7 +8,7 @@ exports.getPosts = async (req, res, next) => {
   try {
     const resData = await Post.find({});
     console.log(resData);
-
+  
     res.status(200).json({
       message: "You are Fetching Details Successfully",
       post: resData,

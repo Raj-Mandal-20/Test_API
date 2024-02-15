@@ -8,6 +8,8 @@ const mongoose = require("mongoose");
 const { v4: uuidv4 } = require("uuid");
 const app = express();
 const authRoute = require("./routes/auth");
+const User = require("./model/user");
+
 /* Additional Setup while using VPN to access database */
 
 const storage = multer.diskStorage({
@@ -49,6 +51,21 @@ app.use((req, res, next) => {
 // tomorrow Learn authentication
 
 app.use("/auth", authRoute);
+
+// carry the userId after this middleware
+app.use(async (req, res, next) => {
+  try {
+    const user = await User.find(req.userId);
+    if (!user) {
+      throw new Error("User Not Found!");
+    }
+  } catch (err) {
+    throw err;
+  }
+
+  next();
+});
+
 app.use("/feed", feedRoute);
 
 app.use("/", (req, res, next) => {
@@ -72,9 +89,10 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(process.env.DATA_BASE_URL)
-  .then((res) => {
+  .then(async (res) => {
     // console.log(res);
     console.log("Database Connection Successful!");
+
     app.listen(process.env.PORT || 3000, () => {
       console.log(`SERVER is RUNNING on PORT=${process.env.PORT}`);
     });

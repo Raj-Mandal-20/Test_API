@@ -34,7 +34,8 @@ exports.login = async (req, res, next) => {
         "SomeSuperScrect",
         { expiresIn: "1h" }
       );
-
+      res.userId = loadedUser._id;
+      
       res.status(200).json({
         userId : loadedUser._id.toString(),
         token : token

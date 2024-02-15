@@ -12,7 +12,7 @@ module.exports = (req, res, next)=>{
     
     try{
           
-        decodedToken =  jwt.verify(token, SomeSuperScrect);
+        decodedToken =  jwt.verify(token, "SomeSuperScrect");
     }
     catch(err){
         err.statusCode = 500;
@@ -25,7 +25,6 @@ module.exports = (req, res, next)=>{
         throw error;
     }
     req.userId = decodedToken.userId;
-
     next();
 
  
