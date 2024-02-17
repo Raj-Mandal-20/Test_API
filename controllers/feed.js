@@ -1,26 +1,21 @@
-const Post = require("../model/post");
 const { validationResult } = require("express-validator");
 
-exports.getPosts = async (req, res, next) => {
-  try {
-    const resData = await Post.find({});
-    console.log(resData);
-  
-    res.status(200).json({
-      message: "You are Fetching Details Successfully",
-      post: resData,
-      createdAt: new Date(),
-      createdBy: "Raj Mandal",
-    });
-  } catch (err) {
-    console.log(err);
-    next(err);
-  }
+exports.getPosts = (req, res, next) => {
+  res.status(200).json({
+    message: "You are Fetching Details Successfully",
+    post: [
+      {
+        title: "Biriyani",
+        describe: "Bengali's Best Food",
+        prize: 300,
+      },
+    ],
+    createdAt: new Date(),
+    createdBy: "Raj Mandal",
+  });
 };
 
-
-exports.createPost = async (req, res, next) => {
-  // console.log(req.body);
+exports.createPost = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -30,37 +25,21 @@ exports.createPost = async (req, res, next) => {
     });
   }
 
-  if (!req.file) {
-    const error = new Error("No Image Provided");
-    error.statusCode = 422;
-    // console.log("file ERROR ☑");
-    // console.log(error);
-    throw error;
-  }
+  const title = req.body.title;
+  const describe = req.body.describe;
+  const prize = req.body.prize;
+  const createdBy = req.body.createdBy;
 
-  try {
-    // console.log(req.file?.path);
-    console.log(req.file.path);
-    const title = req.body.title;
-    const describe = req.body.describe;
-    const imageUrl = req.file.path.replace("\\", "/");
-    const prize = req.body.prize;
-    // const createdBy = req.body.createdBy;
-
-    const post = new Post({
-      title: title,
-      describe: describe,
-      imageUrl: imageUrl,
-      prize: prize,
-    });
-
-    await post.save();
-
-    res.status(201).json({
-      message: "Post Created Successfully!",
-      createdAT: new Date(),
-    });
-  } catch (err) {
-    next(err);
-  }
+  res.status(201).json({
+    message: "Post Created Successfully!",
+    post: [
+      {
+        title: title,
+        describe: describe,
+        prize: prize,
+      },
+    ],
+    createdAT: new Date(),
+    createdBy: createdBy,
+  });
 };
