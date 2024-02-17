@@ -18,6 +18,7 @@ exports.getPosts = async (req, res, next) => {
   }
 };
 
+
 exports.createPost = async (req, res, next) => {
   // console.log(req.body);
   const errors = validationResult(req);
